@@ -72,7 +72,21 @@ describe('/api', () => {
                             .send({ username: "butter_bridge", body: "Macs are way better" })
                             .expect(201).then(({ body }) => {
                                 expect(body.comment).to.be.an("array");
+                                expect(body.comment[0]).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
                             })
+                    });
+                });
+                describe('GET', () => {
+                    it('status 200: respond with an array of comments for a given articleId', () => {
+                        return request(app).get("/api/articles/1/comments").expect(200).then(({ body }) => {
+                            expect(body.comments).to.be.an("array");
+                            expect(body.comments[0]).to.contain.keys(["comment_id", "votes", "created_at", "author", "body"])
+                        })
+                    });
+                    it('status 200: respond with array of comments sorted by commentId by default', () => {
+                        return request(app).get("/api/articles/1/comments").expect(200).then(({ body }) => {
+                            expect(body.comments).to.be.sortedBy("comment_id")
+                        })
                     });
                 });
             });

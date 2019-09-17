@@ -10,9 +10,3 @@ exports.selectArticle = article_id => {
 exports.updateArticle = (votes = 0, article_id) => {
     return connection("articles").where({ article_id }).increment({ votes }).returning("*");
 }
-
-exports.insertComment = (newComment, artical_id) => {
-    const { username, body } = newComment;
-    console.log(username, body)
-    return
-}
