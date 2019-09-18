@@ -1,4 +1,4 @@
-exports.getApi = (req, res) => {
+exports.getApi = (req, res, next) => {
     res.status(200).send({
         "endpoints": {
             "GET /api": {
@@ -37,5 +37,5 @@ exports.getApi = (req, res) => {
                 }
             }
         }
-    })
+    }).catch(next)
 }

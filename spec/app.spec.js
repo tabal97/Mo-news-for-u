@@ -156,6 +156,40 @@ describe('/api', () => {
                             expect(articles).to.have.length(6)
                         })
                 });
+                it('status 200: respond with an array of articles that talk about a particular topic', () => {
+                    return request(app)
+                        .get("/api/articles?topic=mitch")
+                        .expect(200)
+                        .then(({ body: { articles } }) => {
+                            expect(articles[0].topic).to.equal("mitch");
+                            expect(articles).to.have.length(11)
+                        })
+                });
+            });
+        });
+    });
+    describe('/comments', () => {
+        describe('/:comment_id', () => {
+            describe('PATCH', () => {
+                it('status 202: responds with the updated comment', () => {
+                    return request(app)
+                        .patch("/api/comments/2")
+                        .send({ inc_votes: 2 })
+                        .expect(202)
+                        .then(({ body: { comment } }) => {
+                            expect(comment).to.be.an("array");
+                            expect(comment).to.have.length(1)
+                            expect(comment[0]).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
+                            expect(comment[0].votes).to.equal(16);
+                        });
+                });
+            });
+            describe('DELETE', () => {
+                it('status 204: deletes a comment', () => {
+                    return request(app)
+                        .del("/api/comments/2")
+                        .expect(204)
+                });
             });
         });
     });

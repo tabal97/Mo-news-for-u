@@ -16,7 +16,7 @@ exports.updateArticle = (votes = 0, article_id) => {
         .returning("*");
 }
 
-exports.selectAllArticles = (sortBy = "created_at", dir = "asc", author) => {
+exports.selectAllArticles = (sortBy = "created_at", dir = "asc", author, topic) => {
     return connection.select("articles.*")
         .from("articles")
         .leftJoin("comments", "comments.article_id", "articles.article_id")
@@ -26,6 +26,9 @@ exports.selectAllArticles = (sortBy = "created_at", dir = "asc", author) => {
         .modify(currentQuery => {
             if (author) {
                 currentQuery.where("articles.author", author)
+            }
+            if (topic) {
+                currentQuery.where("articles.topic", topic)
             }
         })
 }
