@@ -43,10 +43,10 @@ describe('/api', () => {
         describe('/:username', () => {
             describe('GET', () => {
                 it('status 200: responds with a user object corresponding to the specified user', () => {
-                    return request(app).get("/api/users/butter_bridge").expect(200).then(({ body }) => {
-                        expect(body.user).to.be.an("array");
-                        expect(body.user.length).to.equal(1);
-                        expect(body.user[0]).to.contain.keys(["username", "avatar_url", "name"])
+                    return request(app).get("/api/users/lurker").expect(200).then(({ body: { user } }) => {
+                        expect(user).to.be.an("array");
+                        expect(user.length).to.equal(1);
+                        expect(user[0]).to.contain.keys(["username", "avatar_url", "name"])
                     })
                 });
                 it('status 404: responds with "Not Found" if the username does not exist', () => {
@@ -114,7 +114,7 @@ describe('/api', () => {
                             expect(msg).to.equal("Bad Request")
                         });
                 });
-                it('status 202: ignores all other properties added to the ', () => {
+                it('status 202: ignores all other properties added to the request body', () => {
                     return request(app)
                         .patch("/api/articles/2")
                         .send({ inc_votes: 2, other_votes: "a void vote" })
@@ -250,6 +250,14 @@ describe('/api', () => {
                                 expect(msg).to.equal("Articles Not Found")
                             })
                     });
+                    it('status 404: no articles associated with author', () => {
+                        return request(app)
+                            .get("/api/articles?author=lurker")
+                            .expect(404)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal("Articles Not Found")
+                            })
+                    });
                     it('status 200: respond with an array of articles that talk about a particular topic', () => {
                         return request(app)
                             .get("/api/articles?topic=mitch")
@@ -257,6 +265,14 @@ describe('/api', () => {
                             .then(({ body: { articles } }) => {
                                 expect(articles[0].topic).to.equal("mitch");
                                 expect(articles).to.have.length(11)
+                            })
+                    });
+                    it('status 404: no articles associated with topic', () => {
+                        return request(app)
+                            .get("/api/articles?topic=paper")
+                            .expect(404)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal("Articles Not Found")
                             })
                     });
                     it('status 404: invalid topic query', () => {
@@ -298,6 +314,35 @@ describe('/api', () => {
                         return request(app)
                             .patch("/api/comments/number_in_disguise")
                             .send({ inc_votes: 2 })
+                            .expect(400)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal("Bad Request")
+                            })
+                    });
+                    it('status 400: invalid request body', () => {
+                        return request(app)
+                            .patch("/api/comments/2")
+                            .send({ inc_votes: "notice me" })
+                            .expect(400)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal("Bad Request")
+                            })
+                    });
+                    it('status 202: ignore other properties in the request body', () => {
+                        return request(app)
+                            .patch("/api/comments/2")
+                            .send({ inc_votes: 4, bad_prop: 12 })
+                            .expect(202)
+                            .then(({ body: { comment } }) => {
+                                expect(comment).to.be.an("array");
+                                expect(comment).to.have.length(1)
+                                expect(comment[0]).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
+                                expect(comment[0].votes).to.equal(18);
+                            });
+                    });
+                    it('status 400: no request body', () => {
+                        return request(app)
+                            .patch("/api/comments/2")
                             .expect(400)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal("Bad Request")
