@@ -12,7 +12,7 @@ exports.selectArticle = article_id => {
         })
 }
 
-exports.updateArticle = (votes = 0, article_id) => {
+exports.updateArticle = (votes, article_id) => {
     return connection("articles")
         .where({ article_id })
         .increment({ votes })

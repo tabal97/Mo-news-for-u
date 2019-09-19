@@ -97,6 +97,35 @@ describe('/api', () => {
                             expect(article[0].votes).to.equal(2);
                         })
                 });
+                it('status 400: no request body', () => {
+                    return request(app)
+                        .patch("/api/articles/2")
+                        .expect(400)
+                        .then(({ body: { msg } }) => {
+                            expect(msg).to.equal("Bad Request")
+                        })
+                });
+                it('status 400: invalid request body', () => {
+                    return request(app)
+                        .patch("/api/articles/9000")
+                        .send({ inc_votes: "anything" })
+                        .expect(400)
+                        .then(({ body: { msg } }) => {
+                            expect(msg).to.equal("Bad Request")
+                        });
+                });
+                it('status 202: ignores all other properties added to the ', () => {
+                    return request(app)
+                        .patch("/api/articles/2")
+                        .send({ inc_votes: 2, other_votes: "a void vote" })
+                        .expect(202)
+                        .then(({ body: { article } }) => {
+                            expect(article).to.be.an("array");
+                            expect(article.length).to.equal(1);
+                            expect(article[0]).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes"])
+                            expect(article[0].votes).to.equal(2);
+                        })
+                });
                 it('status 404: responds with "Article Not Found"', () => {
                     return request(app)
                         .patch("/api/articles/9000")
