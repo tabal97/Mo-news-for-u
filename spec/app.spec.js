@@ -28,6 +28,14 @@ describe('/api', () => {
                         expect(body.msg).to.equal("Route Not Found")
                     })
             });
+            it('status 405: invalid method', () => {
+                return request(app)
+                    .post("/api")
+                    .expect(405)
+                    .then(({ body: { msg } }) => {
+                        expect(msg).to.equal("Invalid Method")
+                    })
+            });
         });
     });
     describe('/topics', () => {
@@ -44,9 +52,7 @@ describe('/api', () => {
             describe('GET', () => {
                 it('status 200: responds with a user object corresponding to the specified user', () => {
                     return request(app).get("/api/users/lurker").expect(200).then(({ body: { user } }) => {
-                        expect(user).to.be.an("array");
-                        expect(user.length).to.equal(1);
-                        expect(user[0]).to.contain.keys(["username", "avatar_url", "name"])
+                        expect(user).to.contain.keys(["username", "avatar_url", "name"])
                     })
                 });
                 it('status 404: responds with "Not Found" if the username does not exist', () => {
@@ -62,9 +68,7 @@ describe('/api', () => {
             describe('GET', () => {
                 it('status 200: responds with the article object for the corresponding article id', () => {
                     return request(app).get("/api/articles/2").expect(200).then(({ body: { article } }) => {
-                        expect(article).to.be.an("array");
-                        expect(article.length).to.equal(1);
-                        expect(article[0]).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes", "comment_count"])
+                        expect(article).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes", "comment_count"])
                     })
                 });
                 it('status 404: responds with "Aritcle Not Found"', () => {
@@ -91,10 +95,8 @@ describe('/api', () => {
                         .send({ inc_votes: 2 })
                         .expect(202)
                         .then(({ body: { article } }) => {
-                            expect(article).to.be.an("array");
-                            expect(article.length).to.equal(1);
-                            expect(article[0]).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes"])
-                            expect(article[0].votes).to.equal(2);
+                            expect(article).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes"])
+                            expect(article.votes).to.equal(2);
                         })
                 });
                 it('status 400: no request body', () => {
@@ -120,10 +122,8 @@ describe('/api', () => {
                         .send({ inc_votes: 2, other_votes: "a void vote" })
                         .expect(202)
                         .then(({ body: { article } }) => {
-                            expect(article).to.be.an("array");
-                            expect(article.length).to.equal(1);
-                            expect(article[0]).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes"])
-                            expect(article[0].votes).to.equal(2);
+                            expect(article).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes"])
+                            expect(article.votes).to.equal(2);
                         })
                 });
                 it('status 404: responds with "Article Not Found"', () => {
@@ -150,8 +150,7 @@ describe('/api', () => {
                             return request(app).post("/api/articles/2/comments")
                                 .send({ username: "butter_bridge", body: "Macs are way better" })
                                 .expect(201).then(({ body: { comment } }) => {
-                                    expect(comment).to.be.an("array");
-                                    expect(comment[0]).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
+                                    expect(comment).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
                                 })
                         });
                     });
@@ -295,10 +294,8 @@ describe('/api', () => {
                             .send({ inc_votes: 2 })
                             .expect(202)
                             .then(({ body: { comment } }) => {
-                                expect(comment).to.be.an("array");
-                                expect(comment).to.have.length(1)
-                                expect(comment[0]).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
-                                expect(comment[0].votes).to.equal(16);
+                                expect(comment).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
+                                expect(comment.votes).to.equal(16);
                             });
                     });
                     it('status 404: comment_id not found', () => {
@@ -334,10 +331,8 @@ describe('/api', () => {
                             .send({ inc_votes: 4, bad_prop: 12 })
                             .expect(202)
                             .then(({ body: { comment } }) => {
-                                expect(comment).to.be.an("array");
-                                expect(comment).to.have.length(1)
-                                expect(comment[0]).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
-                                expect(comment[0].votes).to.equal(18);
+                                expect(comment).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
+                                expect(comment.votes).to.equal(18);
                             });
                     });
                     it('status 400: no request body', () => {

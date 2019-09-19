@@ -3,7 +3,7 @@ const { insertComment, selectComments, updateComment, removeComment } = require(
 exports.postComment = (req, res, next) => {
     const body = req.body;
     const { articleId } = req.params;
-    insertComment(body, articleId).then(comment => {
+    insertComment(body, articleId).then(([comment]) => {
         res.status(201).send({ comment });
     }).catch(next)
 };
@@ -19,7 +19,7 @@ exports.getCommentsById = (req, res, next) => {
 exports.patchComment = (req, res, next) => {
     const { inc_votes } = req.body;
     const { comment_id } = req.params;
-    updateComment(comment_id, inc_votes).then(comment => {
+    updateComment(comment_id, inc_votes).then(([comment]) => {
         res.status(202).send({ comment })
     }).catch(next)
 }
