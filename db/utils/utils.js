@@ -1,7 +1,8 @@
 exports.formatDates = articles => {
     return articles.map((article) => {
-        article.created_at = (new Date(article.created_at));
-        return article;
+        const newArticle = { ...article }
+        newArticle.created_at = (new Date(article.created_at));
+        return newArticle;
     })
 };
 

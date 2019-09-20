@@ -74,7 +74,7 @@ describe('formatDates', () => {
       topic: 'cooking',
       author: 'tickle122',
       body: 'The chef Richard McGeown has faced bigger culinary challenges in his distinguished career than frying a meat patty in a little sunflower oil and butter. But this time the eyes and cameras of hundreds of journalists in the room were fixed on the 5oz (140g) pink disc sizzling in his pan, one that had been five years and €250,000 in the making. This was the world’s first proper portion of cultured meat, a beef burger created by Mark Post, professor of physiology, and his team at Maastricht University in the Netherlands. Post (which rhymes with ‘lost’, not ‘ghost’) has been working on in vitro meat (IVM) since 2009. On 5 August this year he presented his cultured beef burger to the world as a ‘proof of concept’. Having shown that the technology works, Post believes that in a decade or so we could see commercial production of meat that has been grown in a lab rather than reared and slaughtered. The comforting illusion that supermarket trays of plastic-wrapped steaks are not pieces of dead animal might become a discomforting reality.',
-      created_at: new Date(1492163783248)
+      created_at: 1492163783248
     },
     {
       title: 'Stone Soup',
@@ -89,28 +89,27 @@ describe('formatDates', () => {
       body: "The 'umami' craze has turned a much-maligned and misunderstood food additive into an object of obsession for the world’s most innovative chefs. But secret ingredient monosodium glutamate’s biggest secret may be that there was never anything wrong with it at all.",
       created_at: 1502921310430
     }];
-    const actualValue = formatDates(input);
-    const expected = [{
+    formatDates(input);
+    expect(input).to.eql([{
       title: 'The vegan carnivore?',
       topic: 'cooking',
       author: 'tickle122',
       body: 'The chef Richard McGeown has faced bigger culinary challenges in his distinguished career than frying a meat patty in a little sunflower oil and butter. But this time the eyes and cameras of hundreds of journalists in the room were fixed on the 5oz (140g) pink disc sizzling in his pan, one that had been five years and €250,000 in the making. This was the world’s first proper portion of cultured meat, a beef burger created by Mark Post, professor of physiology, and his team at Maastricht University in the Netherlands. Post (which rhymes with ‘lost’, not ‘ghost’) has been working on in vitro meat (IVM) since 2009. On 5 August this year he presented his cultured beef burger to the world as a ‘proof of concept’. Having shown that the technology works, Post believes that in a decade or so we could see commercial production of meat that has been grown in a lab rather than reared and slaughtered. The comforting illusion that supermarket trays of plastic-wrapped steaks are not pieces of dead animal might become a discomforting reality.',
-      created_at: new Date(1492163783248)
+      created_at: 1492163783248
     },
     {
       title: 'Stone Soup',
       topic: 'cooking',
       author: 'cooljmessy',
       body: 'The first day I put my family on a Paleolithic diet, I made my kids fried eggs and sausage for breakfast. If they were still hungry, I told them, they could help themselves to more sausage, but they were not allowed to grab a slice of bread, or toast an English muffin, or pour themselves a bowl of cereal. This represented a reversal of the usual strictures, and they were happy to oblige. It was like some weird, unexpected holiday—Passover in July.',
-      created_at: new Date(1481662720516)
+      created_at: 1481662720516
     }, {
       title: 'The Notorious MSG’s Unlikely Formula For Success',
       topic: 'cooking',
       author: 'grumpy19',
       body: "The 'umami' craze has turned a much-maligned and misunderstood food additive into an object of obsession for the world’s most innovative chefs. But secret ingredient monosodium glutamate’s biggest secret may be that there was never anything wrong with it at all.",
-      created_at: new Date(1502921310430)
-    }];
-    expect(actualValue).to.not.equal(expected)
+      created_at: 1502921310430
+    }])
   });
 });
 
@@ -128,16 +127,29 @@ describe('makeRefObj', () => {
     expect(actualValue).to.deep.equal(expectedValue)
   });
   it('returns a reference object with one key-value pair when an array with one element is passed', () => {
-    const input = [{ name: "Mo", age: 22 }, { name: "Samantha", sex: "female", age: 21 }, { name: "Oscar", school: "...of Rock", age: 12 }];
+    const input = [
+      { name: "Mo", age: 22 },
+      { name: "Samantha", sex: "female", age: 21 },
+      { name: "Oscar", school: "...of Rock", age: 12 }
+    ];
     const actualValue = makeRefObj(input, "name", "age");
     const expectedValue = { Mo: 22, Samantha: 21, Oscar: 12 };
     expect(actualValue).to.deep.equal(expectedValue)
   });
   it('does not mutate the array passed', () => {
-    const input = [{ name: "Mo", age: 22 }, { name: "Samantha", sex: "female", age: 21 }, { name: "Oscar", school: "...of Rock", age: 12 }];
-    const actualValue = makeRefObj(input, "name", "age");
-    const expectedValue = { Mo: 22, Samantha: 21, Oscar: 12 };
-    expect(actualValue).to.not.equal(expectedValue)
+    const input = [
+      { name: "Mo", age: 22 },
+      { name: "Samantha", sex: "female", age: 21 },
+      { name: "Oscar", school: "...of Rock", age: 12 }
+    ];
+    makeRefObj(input, "name", "age");
+    expect(input).to.eql(
+      [
+        { name: "Mo", age: 22 },
+        { name: "Samantha", sex: "female", age: 21 },
+        { name: "Oscar", school: "...of Rock", age: 12 }
+      ]
+    )
   });
 });
 
@@ -182,8 +194,8 @@ describe('formatComments', () => {
   it('does not mutate the the array passed ', () => {
     const array = [{ belongs_to: "Me", created_by: "Tristan" }, { created_by: "the_public", belongs_to: "the_people" }];
     const refObj = { Me: "Myself", the_people: "You" };
-    const actualValue = formatComments(array, refObj);
-    const expectedValue = [{ article_id: "Myself", author: "Tristan" }, { article_id: "You", author: "the_public" }];
-    expect(actualValue).to.not.equal(expectedValue);
+    formatComments(array, refObj);
+    expect(array).to.eql([{ belongs_to: "Me", created_by: "Tristan" }, { created_by: "the_public", belongs_to: "the_people" }]);
+    expect(refObj).to.eql({ Me: "Myself", the_people: "You" })
   });
 });

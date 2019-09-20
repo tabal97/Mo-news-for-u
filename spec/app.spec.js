@@ -158,7 +158,7 @@ describe('/api', () => {
                             expect(article.votes).to.equal(2);
                         })
                 });
-                it('status 404: responds with "Article Not Found"', () => {
+                it('status 404: requesting valid article id that does not exist; responds with "Article Not Found"', () => {
                     return request(app)
                         .patch("/api/articles/9000")
                         .send({ inc_votes: 2 })
@@ -299,12 +299,12 @@ describe('/api', () => {
                                 expect(msg).to.equal("Articles Not Found")
                             })
                     });
-                    it('status 404: no articles associated with author', () => {
+                    it.only('status 200: no articles associated with author responds with empty array', () => {
                         return request(app)
                             .get("/api/articles?author=lurker")
-                            .expect(404)
-                            .then(({ body: { msg } }) => {
-                                expect(msg).to.equal("Articles Not Found")
+                            .expect(200)
+                            .then(({ body: { articles } }) => {
+                                expect(articles).to.eql([])
                             })
                     });
                     it('status 200: respond with an array of articles that talk about a particular topic', () => {
