@@ -20,16 +20,16 @@ describe('/api', () => {
                 return request(app)
                     .get("/api")
                     .expect(200)
-                    .then(({ body }) => {
-                        expect(body.endpoints).to.be.an('object');
+                    .then(({ body: { endpoints } }) => {
+                        expect(endpoints).to.be.an('object');
                     })
             });
             it('status 400: responds with error message when an invalid endpoint is requested', () => {
                 return request(app)
                     .get("/invalid_endpoint")
                     .expect(404)
-                    .then(({ body }) => {
-                        expect(body.msg).to.equal("Route Not Found")
+                    .then(({ body: { msg } }) => {
+                        expect(msg).to.equal("Route Not Found")
                     })
             });
             it('status 405: invalid method', () => {
@@ -48,8 +48,25 @@ describe('/api', () => {
                 return request(app)
                     .get("/api/topics")
                     .expect(200)
-                    .then(({ body }) => {
-                        expect(body.topics).to.be.an("array");
+                    .then(({ body: { topics } }) => {
+                        expect(topics).to.be.an("array");
+                    })
+            });
+            it('status 200: responds with a default limit of two topics', () => {
+                return request(app)
+                    .get("/api/topics")
+                    .expect(200)
+                    .then(({ body: { topics } }) => {
+                        expect(topics).to.have.length(2)
+                    })
+            });
+            it.only('status 200: can take limit and page queries', () => {
+                return request(app)
+                    .get("/api/topics?p=3&limit=1")
+                    .expect(200)
+                    .then(({ body: { topics } }) => {
+                        expect(topics).to.have.length(1)
+                        expect(topics[0]).to.eql({ slug: 'paper', description: 'what books are made of' })
                     })
             });
             it('status 405: invalid method', () => {
