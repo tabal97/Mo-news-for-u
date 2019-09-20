@@ -1,4 +1,6 @@
-exports.checkAuthorExists = (username, connection) => {
+const connection = require("../db/connection")
+
+exports.checkAuthorExists = (username) => {
     console.log(username)
     return connection.first('*')
         .from('users')
@@ -9,7 +11,7 @@ exports.checkAuthorExists = (username, connection) => {
         })
 }
 
-exports.checkTopicExists = (slug, connection) => {
+exports.checkTopicExists = (slug) => {
     return connection.first('*')
         .from('topics')
         .where({ slug })
@@ -19,7 +21,7 @@ exports.checkTopicExists = (slug, connection) => {
         })
 }
 
-exports.countTopics = (connection) => {
+exports.countTopics = () => {
     return connection.select('*')
         .from('topics')
         .then(topics => {
@@ -27,7 +29,7 @@ exports.countTopics = (connection) => {
         })
 }
 
-exports.countArticles = (connection) => {
+exports.countArticles = () => {
     return connection.select('*')
         .from('articles')
         .then(articles => {
@@ -35,7 +37,15 @@ exports.countArticles = (connection) => {
         })
 }
 
-exports.countComments = (connection) => {
+exports.countUsers = () => {
+    return connection.select('*')
+        .from('users')
+        .then(users => {
+            return users.length;
+        })
+}
+
+exports.countComments = () => {
     return connection.select('*')
         .from('comments')
         .then(comments => {

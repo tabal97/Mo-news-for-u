@@ -2,8 +2,8 @@ const { selectArticle, updateArticle, selectAllArticles } = require("../models/a
 
 exports.getArticle = (req, res, next) => {
     const { articleId } = req.params;
-    selectArticle(articleId).then(([article]) => {
-        res.status(200).send({ article })
+    selectArticle(articleId).then(([[article], total_articles]) => {
+        res.status(200).send({ article, total_articles })
     }).catch(next)
 }
 

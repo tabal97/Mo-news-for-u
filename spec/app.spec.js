@@ -98,6 +98,14 @@ describe('/api', () => {
                             expect(user).to.contain.keys(["username", "avatar_url", "name"])
                         })
                 });
+                it('status 200: response body contains a total_users key', () => {
+                    return request(app)
+                        .get("/api/users/lurker")
+                        .expect(200)
+                        .then(({ body: { total_users } }) => {
+                            expect(total_users).to.equal(4)
+                        })
+                });
                 it('status 404: responds with "Not Found" if the username does not exist', () => {
                     return request(app)
                         .get("/api/users/non_existent_user")
@@ -126,6 +134,14 @@ describe('/api', () => {
                         .expect(200)
                         .then(({ body: { article } }) => {
                             expect(article).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes", "comment_count"])
+                        })
+                });
+                it('status 200: response body should contain total_articles property', () => {
+                    return request(app)
+                        .get("/api/articles/2")
+                        .expect(200)
+                        .then(({ body: { total_articles } }) => {
+                            expect(total_articles).to.equal(12)
                         })
                 });
                 it('status 404: responds with "Aritcle Not Found"', () => {
@@ -229,6 +245,14 @@ describe('/api', () => {
                                 .then(({ body: { comments } }) => {
                                     expect(comments).to.be.an("array");
                                     expect(comments[0]).to.contain.keys(["comment_id", "votes", "created_at", "author", "body"])
+                                })
+                        });
+                        it('status 200: response body should contain total_comments property', () => {
+                            return request(app)
+                                .get("/api/articles/1/comments")
+                                .then(({ body: { total_comments } }) => {
+                                    // console.log(body)
+                                    expect(total_comments).to.equal(18)
                                 })
                         });
                         it('status 200: respond with array of comments sorted by created_at by default', () => {

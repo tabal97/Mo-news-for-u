@@ -8,6 +8,6 @@ exports.selectAllTopics = (limit = 2, p = 1) => {
         .limit(limit)
         .offset((p - 1) * limit)
         .then(topics => {
-            return Promise.all([topics, countTopics(connection)])
+            return Promise.all([topics, countTopics()])
         })
 }

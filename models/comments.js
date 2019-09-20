@@ -1,4 +1,5 @@
 const connection = require("../db/connection");
+const { countComments } = require("../utils")
 
 exports.insertComment = (newComment, article_id) => {
     const { username, body } = newComment;
@@ -13,6 +14,9 @@ exports.selectComments = (article_id, sortBy = "created_at", dir = "desc", limit
         .limit(limit)
         .offset((p - 1) * limit)
         .where({ article_id })
+        .then(comments => {
+            return Promise.all([comments, countComments()])
+        })
 };
 
 exports.updateComment = (comment_id, votes) => {

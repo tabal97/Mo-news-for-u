@@ -1,5 +1,6 @@
 const connection = require("../db/connection");
-const { checkTopicExists, checkAuthorExists } = require("../utils")
+const { checkTopicExists, checkAuthorExists } = require("../utils");
+const { countArticles } = require("../utils")
 
 exports.selectArticle = article_id => {
     return connection.select("articles.*")
@@ -10,6 +11,8 @@ exports.selectArticle = article_id => {
         .where({ "articles.article_id": article_id }).then(article => {
             if (article.length) { return article }
             else return Promise.reject({ status: 404, msg: "Article Not Found" })
+        }).then(article => {
+            return Promise.all([article, countArticles()])
         })
 }
 
@@ -47,5 +50,7 @@ exports.selectAllArticles = (sortBy = "created_at", dir = "desc", author, topic,
             else return Promise.reject({ status: 404, msg: "No Articles in the Database" })
         }).then(([articles]) => {
             return articles
+        }).then(articles => {
+            return Promise.all([articles, countArticles()])
         })
 }

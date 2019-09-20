@@ -11,8 +11,8 @@ exports.postComment = (req, res, next) => {
 exports.getCommentsById = (req, res, next) => {
     const { articleId } = req.params;
     const { sortBy, orderBy, limit, p } = req.query;
-    selectComments(articleId, sortBy, orderBy, limit, p).then(comments => {
-        res.status(200).send({ comments });
+    selectComments(articleId, sortBy, orderBy, limit, p).then(([comments, total_comments]) => {
+        res.status(200).send({ comments, total_comments });
     }).catch(next)
 }
 
