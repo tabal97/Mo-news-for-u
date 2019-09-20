@@ -296,10 +296,10 @@ describe('/api', () => {
                             .get("/api/articles?author=mo_tabal")
                             .expect(404)
                             .then(({ body: { msg } }) => {
-                                expect(msg).to.equal("Articles Not Found")
+                                expect(msg).to.equal("Author Does not Exist")
                             })
                     });
-                    it.only('status 200: no articles associated with author responds with empty array', () => {
+                    it('status 200: no articles associated with author responds with empty array', () => {
                         return request(app)
                             .get("/api/articles?author=lurker")
                             .expect(200)
@@ -316,12 +316,12 @@ describe('/api', () => {
                                 expect(articles).to.have.length(11)
                             })
                     });
-                    it('status 404: no articles associated with topic', () => {
+                    it('status 200: no articles associated with topic responds with an empty array', () => {
                         return request(app)
                             .get("/api/articles?topic=paper")
-                            .expect(404)
-                            .then(({ body: { msg } }) => {
-                                expect(msg).to.equal("Articles Not Found")
+                            .expect(200)
+                            .then(({ body: { articles } }) => {
+                                expect(articles).to.eql([])
                             })
                     });
                     it('status 404: invalid topic query', () => {
@@ -329,7 +329,7 @@ describe('/api', () => {
                             .get("/api/articles?topic=buzz_lightyear")
                             .expect(404)
                             .then(({ body: { msg } }) => {
-                                expect(msg).to.equal("Articles Not Found")
+                                expect(msg).to.equal("Topic Does not Exist")
                             })
                     });
                     it('status 405: invalid method', () => {
