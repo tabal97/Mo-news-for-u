@@ -251,7 +251,6 @@ describe('/api', () => {
                             return request(app)
                                 .get("/api/articles/1/comments")
                                 .then(({ body: { total_comments } }) => {
-                                    // console.log(body)
                                     expect(total_comments).to.equal(18)
                                 })
                         });
@@ -315,6 +314,14 @@ describe('/api', () => {
                             .expect(200)
                             .then(({ body: { articles } }) => {
                                 expect(articles[0]).to.contain.keys(["comment_count"])
+                            })
+                    });
+                    it.only('status 200: response body should contain total_articles property', () => {
+                        return request(app)
+                            .get("/api/articles")
+                            .expect(200)
+                            .then(({ body: { total_articles } }) => {
+                                expect(total_articles).to.equal(12)
                             })
                     });
                     it('status 200: respond with an array of articles sorted by created_at by default', () => {
