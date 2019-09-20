@@ -8,6 +8,7 @@ chai.use(require("chai-sorted"));
 
 describe('/api', () => {
     after(() => {
+        200
         return connection.destroy();
     });
     beforeEach(() => {
@@ -45,6 +46,14 @@ describe('/api', () => {
                     expect(body.topics).to.be.an("array");
                 })
             });
+            it('status 405: invalid method', () => {
+                return request(app)
+                    .post("/api/topics")
+                    .expect(405)
+                    .then(({ body: { msg } }) => {
+                        expect(msg).to.equal("Invalid Method")
+                    })
+            });
         });
     });
     describe('/users', () => {
@@ -59,6 +68,14 @@ describe('/api', () => {
                     return request(app).get("/api/users/non_existent_user").expect(404).then(({ body }) => {
                         expect(body.msg).to.equal("User does not exist")
                     })
+                });
+                it('status 405: invalid method', () => {
+                    return request(app)
+                        .post("/api/users/lurker")
+                        .expect(405)
+                        .then(({ body: { msg } }) => {
+                            expect(msg).to.equal("Invalid Method")
+                        })
                 });
             });
         });
@@ -144,6 +161,14 @@ describe('/api', () => {
                             expect(msg).to.equal("Bad Request")
                         })
                 });
+                it('status 405: invalid method', () => {
+                    return request(app)
+                        .delete("/api/articles/2")
+                        .expect(405)
+                        .then(({ body: { msg } }) => {
+                            expect(msg).to.equal("Invalid Method")
+                        })
+                });
                 describe('/comments', () => {
                     describe('POST', () => {
                         it('status 201: responds with the posted comment', () => {
@@ -188,10 +213,18 @@ describe('/api', () => {
                                     expect(comments).to.be.ascendingBy("comment_id")
                                 })
                         });
+                        it('status 405: invalid method', () => {
+                            return request(app)
+                                .delete("/api/articles/1/comments")
+                                .expect(405)
+                                .then(({ body: { msg } }) => {
+                                    expect(msg).to.equal("Invalid Method")
+                                })
+                        });
                     });
                 });
             });
-            describe.only('/', () => {
+            describe('/', () => {
                 describe('GET', () => {
                     it('status 200: respond with an array of all the articles with the comment_count property in each article', () => {
                         return request(app)
@@ -282,6 +315,14 @@ describe('/api', () => {
                                 expect(msg).to.equal("Articles Not Found")
                             })
                     });
+                    it('status 405: invalid method', () => {
+                        return request(app)
+                            .delete("/api/articles")
+                            .expect(405)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal("Invalid Method")
+                            })
+                    });
                 });
             });
         });
@@ -364,6 +405,14 @@ describe('/api', () => {
                             .expect(400)
                             .then(({ body: { msg } }) => {
                                 expect(msg).to.equal("Bad Request")
+                            })
+                    });
+                    it('status 405: invalid method', () => {
+                        return request(app)
+                            .get("/api/comments/2")
+                            .expect(405)
+                            .then(({ body: { msg } }) => {
+                                expect(msg).to.equal("Invalid Method")
                             })
                     });
                 });

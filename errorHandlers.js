@@ -17,3 +17,7 @@ exports.internalServerErrorHandler = (err, req, res, next) => {
     res.status(500).send({ msg: "Internal Server Error" });
 };
 
+exports.invalidMethodErrorHandler = (req, res) => {
+    res.status(405).send({ msg: "Invalid Method" })
+}
+
