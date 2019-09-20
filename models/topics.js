@@ -2,7 +2,7 @@ const connection = require("../db/connection");
 const { countTopics } = require("../utils")
 
 
-exports.selectAllTopics = (limit = 2, p = 1) => {
+exports.selectAllTopics = (limit = 10, p = 1) => {
     return connection.select("*")
         .from("topics")
         .limit(limit)

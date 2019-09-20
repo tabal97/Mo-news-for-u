@@ -52,12 +52,12 @@ describe('/api', () => {
                         expect(topics).to.be.an("array");
                     })
             });
-            it('status 200: responds with a default limit of two topics', () => {
+            it('status 200: responds with a default limit of 10 topics', () => {
                 return request(app)
                     .get("/api/topics")
                     .expect(200)
                     .then(({ body: { topics } }) => {
-                        expect(topics).to.have.length(2)
+                        expect(topics).to.have.length(3)
                     })
             });
             it('status 200: contains a total_topics property in the response body', () => {
@@ -278,12 +278,12 @@ describe('/api', () => {
                                     expect(comments).to.be.ascendingBy("comment_id")
                                 })
                         });
-                        it('status 200: respond with an array of comments with a default limit of 5', () => {
+                        it('status 200: respond with an array of comments with a default limit of 10', () => {
                             return request(app)
                                 .get("/api/articles/1/comments")
                                 .expect(200)
                                 .then(({ body: { comments } }) => {
-                                    expect(comments).to.have.length(5);
+                                    expect(comments).to.have.length(10);
                                 })
                         });
                         it('status 200: respond with an array of comments that takes limit and page queries', () => {
@@ -316,7 +316,7 @@ describe('/api', () => {
                                 expect(articles[0]).to.contain.keys(["comment_count"])
                             })
                     });
-                    it.only('status 200: response body should contain total_articles property', () => {
+                    it('status 200: response body should contain total_articles property', () => {
                         return request(app)
                             .get("/api/articles")
                             .expect(200)
@@ -361,15 +361,15 @@ describe('/api', () => {
                             .expect(200)
                             .then(({ body: { articles } }) => {
                                 expect(articles[0].author).to.equal("icellusedkars");
-                                expect(articles).to.have.length(3)
+                                expect(articles).to.have.length(6)
                             })
                     });
-                    it('status 200: respond with an array of articles with a default limit of 3', () => {
+                    it('status 200: respond with an array of articles with a default limit of 10', () => {
                         return request(app)
                             .get("/api/articles")
                             .expect(200)
                             .then(({ body: { articles } }) => {
-                                expect(articles).to.have.length(3)
+                                expect(articles).to.have.length(10)
                             })
                     });
                     it('status 200: respond with an array of articles that accepts limit and page queries', () => {
@@ -403,7 +403,7 @@ describe('/api', () => {
                             .expect(200)
                             .then(({ body: { articles } }) => {
                                 expect(articles[0].topic).to.equal("mitch");
-                                expect(articles).to.have.length(3)
+                                expect(articles).to.have.length(10)
                             })
                     });
                     it('status 200: no articles associated with topic responds with an empty array', () => {

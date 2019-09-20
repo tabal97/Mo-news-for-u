@@ -29,9 +29,17 @@ exports.countTopics = () => {
         })
 }
 
-exports.countArticles = () => {
+exports.countArticles = (author, topic) => {
     return connection.select('*')
         .from('articles')
+        .modify(currentQuery => {
+            if (author) {
+                currentQuery.where("articles.author", author)
+            }
+            if (topic) {
+                currentQuery.where("articles.topic", topic)
+            }
+        })
         .then(articles => {
             return articles.length;
         })

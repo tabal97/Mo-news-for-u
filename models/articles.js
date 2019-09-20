@@ -26,7 +26,7 @@ exports.updateArticle = (votes, article_id) => {
         })
 }
 
-exports.selectAllArticles = (sortBy = "created_at", dir = "desc", author, topic, limit = 3, p = 1) => {
+exports.selectAllArticles = (sortBy = "created_at", dir = "desc", author, topic, limit = 10, p = 1) => {
     return connection.select("articles.*")
         .from("articles")
         .leftJoin("comments", "comments.article_id", "articles.article_id")
@@ -51,6 +51,6 @@ exports.selectAllArticles = (sortBy = "created_at", dir = "desc", author, topic,
         }).then(([articles]) => {
             return articles
         }).then(articles => {
-            return Promise.all([articles, countArticles()])
+            return Promise.all([articles, countArticles(author, topic)])
         })
 }
