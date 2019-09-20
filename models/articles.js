@@ -22,13 +22,15 @@ exports.updateArticle = (votes, article_id) => {
         })
 }
 
-exports.selectAllArticles = (sortBy = "created_at", dir = "desc", author, topic) => {
+exports.selectAllArticles = (sortBy = "created_at", dir = "desc", author, topic, limit = 3, p = 1) => {
     return connection.select("articles.*")
         .from("articles")
         .leftJoin("comments", "comments.article_id", "articles.article_id")
         .groupBy("articles.article_id")
         .count({ comment_count: "comment_id" })
         .orderBy(sortBy, dir)
+        .limit(limit)
+        .offset((p - 1) * limit)
         .modify(currentQuery => {
             if (author) {
                 currentQuery.where("articles.author", author)

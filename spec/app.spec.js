@@ -325,6 +325,24 @@ describe('/api', () => {
                                 expect(articles).to.have.length(6)
                             })
                     });
+                    it('status 200: respond with an array of articles with a default limit of 3', () => {
+                        return request(app)
+                            .get("/api/articles")
+                            .expect(200)
+                            .then(({ body: { articles } }) => {
+                                console.log(articles)
+                                expect(articles).to.have.length(3)
+                            })
+                    });
+                    it('status 200: respond with an array of articles that accepts limit and page queries', () => {
+                        return request(app)
+                            .get("/api/articles?p=2&limit=4&sortBy=article_id")
+                            .expect(200)
+                            .then(({ body: { articles } }) => {
+                                expect(articles).to.have.length(4)
+                                expect(articles.map(article => article.article_id)).to.eql([8, 7, 6, 5])
+                            })
+                    });
                     it('status 404: invalid author query', () => {
                         return request(app)
                             .get("/api/articles?author=mo_tabal")
