@@ -169,7 +169,7 @@ describe('/api', () => {
                                 .get("/api/articles/1/comments")
                                 .expect(200)
                                 .then(({ body: { comments } }) => {
-                                    expect(comments).to.be.sortedBy("created_at")
+                                    expect(comments).to.be.descendingBy("created_at")
                                 })
                         });
                         it('status 200: respond with array of comments sorted by a query', () => {
@@ -177,21 +177,21 @@ describe('/api', () => {
                                 .get("/api/articles/1/comments?sortBy=comment_id")
                                 .expect(200)
                                 .then(({ body: { comments } }) => {
-                                    expect(comments).to.be.sortedBy("comment_id")
+                                    expect(comments).to.be.descendingBy("comment_id")
                                 })
                         });
                         it('status 200: respond with array of comments in ordered by a query', () => {
                             return request(app)
-                                .get("/api/articles/1/comments?sortBy=comment_id&orderBy=desc")
+                                .get("/api/articles/1/comments?sortBy=comment_id&orderBy=asc")
                                 .expect(200)
                                 .then(({ body: { comments } }) => {
-                                    expect(comments).to.be.descendingBy("comment_id")
+                                    expect(comments).to.be.ascendingBy("comment_id")
                                 })
                         });
                     });
                 });
             });
-            describe('/', () => {
+            describe.only('/', () => {
                 describe('GET', () => {
                     it('status 200: respond with an array of all the articles with the comment_count property in each article', () => {
                         return request(app)
@@ -206,7 +206,7 @@ describe('/api', () => {
                             .get("/api/articles")
                             .expect(200)
                             .then(({ body: { articles } }) => {
-                                expect(articles).to.be.sortedBy("created_at")
+                                expect(articles).to.be.descendingBy("created_at")
                             })
                     });
                     it('status 200: respond with an array of articles sorted by a passed query', () => {
@@ -214,7 +214,7 @@ describe('/api', () => {
                             .get("/api/articles?sortBy=article_id")
                             .expect(200)
                             .then(({ body: { articles } }) => {
-                                expect(articles).to.be.sortedBy("article_id")
+                                expect(articles).to.be.descendingBy("article_id")
                             })
                     });
                     it('status 400: invalid column to sortBy', () => {
@@ -226,10 +226,10 @@ describe('/api', () => {
                     });
                     it('status 200: respond with an array of articles ordered by a passed query', () => {
                         return request(app)
-                            .get("/api/articles?sortBy=article_id&orderBy=desc")
+                            .get("/api/articles?sortBy=article_id&orderBy=asc")
                             .expect(200)
                             .then(({ body: { articles } }) => {
-                                expect(articles).to.be.descendingBy("article_id")
+                                expect(articles).to.be.ascendingBy("article_id")
                             })
                     });
                     it('status 200: respond with an array of articles written by an author', () => {
