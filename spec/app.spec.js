@@ -60,7 +60,7 @@ describe('/api', () => {
                         expect(topics).to.have.length(2)
                     })
             });
-            it.only('status 200: can take limit and page queries', () => {
+            it('status 200: can take limit and page queries', () => {
                 return request(app)
                     .get("/api/topics?p=3&limit=1")
                     .expect(200)
@@ -245,6 +245,23 @@ describe('/api', () => {
                                 .expect(200)
                                 .then(({ body: { comments } }) => {
                                     expect(comments).to.be.ascendingBy("comment_id")
+                                })
+                        });
+                        it('status 200: respond with an array of comments with a default limit of 5', () => {
+                            return request(app)
+                                .get("/api/articles/1/comments")
+                                .expect(200)
+                                .then(({ body: { comments } }) => {
+                                    expect(comments).to.have.length(5);
+                                })
+                        });
+                        it('status 200: respond with an array of comments that takes limit and page queries', () => {
+                            return request(app)
+                                .get("/api/articles/1/comments?limit=3&p=4&sortBy=comment_id")
+                                .expect(200)
+                                .then(({ body: { comments } }) => {
+                                    expect(comments).to.have.length(3);
+                                    expect(comments.map(comment => comment.comment_id)).to.eql([5, 4, 3])
                                 })
                         });
                         it('status 405: invalid method', () => {

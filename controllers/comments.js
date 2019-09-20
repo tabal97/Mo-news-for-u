@@ -10,8 +10,8 @@ exports.postComment = (req, res, next) => {
 
 exports.getCommentsById = (req, res, next) => {
     const { articleId } = req.params;
-    const { sortBy, orderBy } = req.query;
-    selectComments(articleId, sortBy, orderBy).then(comments => {
+    const { sortBy, orderBy, limit, p } = req.query;
+    selectComments(articleId, sortBy, orderBy, limit, p).then(comments => {
         res.status(200).send({ comments });
     }).catch(next)
 }
