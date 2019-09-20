@@ -17,9 +17,12 @@ describe('/api', () => {
     describe('/', () => {
         describe('GET', () => {
             it('status 200: responds with all the available endpoints of the api', () => {
-                return request(app).get("/api").expect(200).then(({ body }) => {
-                    expect(body.endpoints).to.be.an('object');
-                })
+                return request(app)
+                    .get("/api")
+                    .expect(200)
+                    .then(({ body }) => {
+                        expect(body.endpoints).to.be.an('object');
+                    })
             });
             it('status 400: responds with error message when an invalid endpoint is requested', () => {
                 return request(app)
@@ -42,9 +45,12 @@ describe('/api', () => {
     describe('/topics', () => {
         describe('GET', () => {
             it('status 200: responds with an array of all the topics', () => {
-                return request(app).get("/api/topics").expect(200).then(({ body }) => {
-                    expect(body.topics).to.be.an("array");
-                })
+                return request(app)
+                    .get("/api/topics")
+                    .expect(200)
+                    .then(({ body }) => {
+                        expect(body.topics).to.be.an("array");
+                    })
             });
             it('status 405: invalid method', () => {
                 return request(app)
@@ -60,14 +66,20 @@ describe('/api', () => {
         describe('/:username', () => {
             describe('GET', () => {
                 it('status 200: responds with a user object corresponding to the specified user', () => {
-                    return request(app).get("/api/users/lurker").expect(200).then(({ body: { user } }) => {
-                        expect(user).to.contain.keys(["username", "avatar_url", "name"])
-                    })
+                    return request(app)
+                        .get("/api/users/lurker")
+                        .expect(200)
+                        .then(({ body: { user } }) => {
+                            expect(user).to.contain.keys(["username", "avatar_url", "name"])
+                        })
                 });
                 it('status 404: responds with "Not Found" if the username does not exist', () => {
-                    return request(app).get("/api/users/non_existent_user").expect(404).then(({ body }) => {
-                        expect(body.msg).to.equal("User does not exist")
-                    })
+                    return request(app)
+                        .get("/api/users/non_existent_user")
+                        .expect(404)
+                        .then(({ body }) => {
+                            expect(body.msg).to.equal("User does not exist")
+                        })
                 });
                 it('status 405: invalid method', () => {
                     return request(app)
@@ -84,9 +96,12 @@ describe('/api', () => {
         describe('/:articleId', () => {
             describe('GET', () => {
                 it('status 200: responds with the article object for the corresponding article id', () => {
-                    return request(app).get("/api/articles/2").expect(200).then(({ body: { article } }) => {
-                        expect(article).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes", "comment_count"])
-                    })
+                    return request(app)
+                        .get("/api/articles/2")
+                        .expect(200)
+                        .then(({ body: { article } }) => {
+                            expect(article).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes", "comment_count"])
+                        })
                 });
                 it('status 404: responds with "Aritcle Not Found"', () => {
                     return request(app)
@@ -172,9 +187,11 @@ describe('/api', () => {
                 describe('/comments', () => {
                     describe('POST', () => {
                         it('status 201: responds with the posted comment', () => {
-                            return request(app).post("/api/articles/2/comments")
+                            return request(app)
+                                .post("/api/articles/2/comments")
                                 .send({ username: "butter_bridge", body: "Macs are way better" })
-                                .expect(201).then(({ body: { comment } }) => {
+                                .expect(201)
+                                .then(({ body: { comment } }) => {
                                     expect(comment).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
                                 })
                         });
