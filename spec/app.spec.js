@@ -60,6 +60,14 @@ describe('/api', () => {
                         expect(topics).to.have.length(2)
                     })
             });
+            xit('status 200: contains a total_topics property in the response body', () => {
+                return request(app)
+                    .get("/api/topics")
+                    .expect(200)
+                    .then(({ body: { total_topics } }) => {
+                        expect(total_topics).to.equal(3)
+                    })
+            });
             it('status 200: can take limit and page queries', () => {
                 return request(app)
                     .get("/api/topics?p=3&limit=1")
@@ -322,7 +330,7 @@ describe('/api', () => {
                             .expect(200)
                             .then(({ body: { articles } }) => {
                                 expect(articles[0].author).to.equal("icellusedkars");
-                                expect(articles).to.have.length(6)
+                                expect(articles).to.have.length(3)
                             })
                     });
                     it('status 200: respond with an array of articles with a default limit of 3', () => {
@@ -330,7 +338,6 @@ describe('/api', () => {
                             .get("/api/articles")
                             .expect(200)
                             .then(({ body: { articles } }) => {
-                                console.log(articles)
                                 expect(articles).to.have.length(3)
                             })
                     });
@@ -365,7 +372,7 @@ describe('/api', () => {
                             .expect(200)
                             .then(({ body: { articles } }) => {
                                 expect(articles[0].topic).to.equal("mitch");
-                                expect(articles).to.have.length(11)
+                                expect(articles).to.have.length(3)
                             })
                     });
                     it('status 200: no articles associated with topic responds with an empty array', () => {

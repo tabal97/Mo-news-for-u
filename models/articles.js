@@ -1,4 +1,5 @@
 const connection = require("../db/connection");
+const { checkTopicExists, checkAuthorExists } = require("../utils")
 
 exports.selectArticle = article_id => {
     return connection.select("articles.*")
@@ -40,31 +41,11 @@ exports.selectAllArticles = (sortBy = "created_at", dir = "desc", author, topic,
             }
         }).then(articles => {
             if (articles.length) { return [articles] }
-            else if (author && topic) return Promise.all([articles, checkAuthorExists(author), checkTopicExists(topic)])
-            else if (author) return Promise.all([articles, checkAuthorExists(author)])
-            else if (topic) return Promise.all([articles, checkTopicExists(topic)])
+            else if (author && topic) return Promise.all([articles, checkAuthorExists(author, connection), checkTopicExists(topic, connection)])
+            else if (author) return Promise.all([articles, checkAuthorExists(author, connection)])
+            else if (topic) return Promise.all([articles, checkTopicExists(topic, connection)])
             else return Promise.reject({ status: 404, msg: "No Articles in the Database" })
         }).then(([articles]) => {
             return articles
-        })
-}
-
-function checkAuthorExists(username) {
-    return connection.first('*')
-        .from('users')
-        .where({ username })
-        .then(author => {
-            if (!author) return Promise.reject({ status: 404, msg: 'Author Does not Exist' })
-            return true;
-        })
-}
-
-const checkTopicExists = slug => {
-    return connection.first('*')
-        .from('topics')
-        .where({ slug })
-        .then(topic => {
-            if (!topic) return Promise.reject({ status: 404, msg: 'Topic Does not Exist' })
-            return true;
         })
 }
