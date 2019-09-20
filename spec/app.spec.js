@@ -60,7 +60,7 @@ describe('/api', () => {
                         expect(topics).to.have.length(2)
                     })
             });
-            xit('status 200: contains a total_topics property in the response body', () => {
+            it('status 200: contains a total_topics property in the response body', () => {
                 return request(app)
                     .get("/api/topics")
                     .expect(200)

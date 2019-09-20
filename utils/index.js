@@ -18,3 +18,27 @@ exports.checkTopicExists = (slug, connection) => {
             return true;
         })
 }
+
+exports.countTopics = (connection) => {
+    return connection.select('*')
+        .from('topics')
+        .then(topics => {
+            return topics.length;
+        })
+}
+
+exports.countArticles = (connection) => {
+    return connection.select('*')
+        .from('articles')
+        .then(articles => {
+            return articles.length;
+        })
+}
+
+exports.countComments = (connection) => {
+    return connection.select('*')
+        .from('comments')
+        .then(comments => {
+            return comments.length;
+        })
+}
