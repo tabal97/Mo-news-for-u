@@ -1,7 +1,6 @@
 const connection = require("../db/connection")
 
 exports.checkAuthorExists = (username) => {
-    console.log(username)
     return connection.first('*')
         .from('users')
         .where({ username })

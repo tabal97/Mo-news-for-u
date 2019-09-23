@@ -15,7 +15,8 @@ exports.selectComments = (article_id, sortBy = "created_at", dir = "desc", limit
         .offset((p - 1) * limit)
         .where({ article_id })
         .then(comments => {
-            return Promise.all([comments, countComments()])
+            if (comments.length) return Promise.all([comments, countComments()])
+            return Promise.reject({ status: 404, msg: "Article Not Found" })
         })
 };
 

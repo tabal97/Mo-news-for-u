@@ -162,22 +162,22 @@ describe('/api', () => {
                 });
             });
             describe('PATCH', () => {
-                it('status 202: responds with the updated article', () => {
+                it('status 200: responds with the updated article', () => {
                     return request(app)
                         .patch("/api/articles/2")
                         .send({ inc_votes: 2 })
-                        .expect(202)
+                        .expect(200)
                         .then(({ body: { article } }) => {
                             expect(article).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes"])
                             expect(article.votes).to.equal(2);
                         })
                 });
-                it('status 400: no request body', () => {
+                it('status 200: no request body', () => {
                     return request(app)
                         .patch("/api/articles/2")
-                        .expect(400)
-                        .then(({ body: { msg } }) => {
-                            expect(msg).to.equal("Bad Request")
+                        .expect(200)
+                        .then(({ body: { article } }) => {
+                            expect(article.article_id).to.equal(2)
                         })
                 });
                 it('status 400: invalid request body', () => {
@@ -189,11 +189,11 @@ describe('/api', () => {
                             expect(msg).to.equal("Bad Request")
                         });
                 });
-                it('status 202: ignores all other properties added to the request body', () => {
+                it('status 200: ignores all other properties added to the request body', () => {
                     return request(app)
                         .patch("/api/articles/2")
                         .send({ inc_votes: 2, other_votes: "a void vote" })
-                        .expect(202)
+                        .expect(200)
                         .then(({ body: { article } }) => {
                             expect(article).to.contain.keys(["author", "title", "article_id", "body", "topic", "created_at", "votes"])
                             expect(article.votes).to.equal(2);
@@ -295,6 +295,14 @@ describe('/api', () => {
                                     expect(comments.map(comment => comment.comment_id)).to.eql([5, 4, 3])
                                 })
                         });
+                        it("status 404: request for comments of articles id that doesn't exist", () => {
+                            return request(app)
+                                .get("/api/articles/1000/comments")
+                                .expect(404)
+                                .then(({ body: { msg } }) => {
+                                    expect(msg).to.equal("Article Not Found")
+                                })
+                        });
                         it('status 405: invalid method', () => {
                             return request(app)
                                 .delete("/api/articles/1/comments")
@@ -334,10 +342,10 @@ describe('/api', () => {
                     });
                     it('status 200: respond with an array of articles sorted by a passed query', () => {
                         return request(app)
-                            .get("/api/articles?sortBy=article_id")
+                            .get("/api/articles?sortBy=author")
                             .expect(200)
                             .then(({ body: { articles } }) => {
-                                expect(articles).to.be.descendingBy("article_id")
+                                expect(articles).to.be.descendingBy("author");
                             })
                     });
                     it('status 400: invalid column to sortBy', () => {
@@ -436,11 +444,11 @@ describe('/api', () => {
         describe('/comments', () => {
             describe('/:comment_id', () => {
                 describe('PATCH', () => {
-                    it('status 202: responds with the updated comment', () => {
+                    it('status 200: responds with the updated comment', () => {
                         return request(app)
                             .patch("/api/comments/2")
                             .send({ inc_votes: 2 })
-                            .expect(202)
+                            .expect(200)
                             .then(({ body: { comment } }) => {
                                 expect(comment).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
                                 expect(comment.votes).to.equal(16);
@@ -473,11 +481,11 @@ describe('/api', () => {
                                 expect(msg).to.equal("Bad Request")
                             })
                     });
-                    it('status 202: ignore other properties in the request body', () => {
+                    it('status 200: ignore other properties in the request body', () => {
                         return request(app)
                             .patch("/api/comments/2")
                             .send({ inc_votes: 4, bad_prop: 12 })
-                            .expect(202)
+                            .expect(200)
                             .then(({ body: { comment } }) => {
                                 expect(comment).to.contain.keys(["comment_id", "author", "article_id", "votes", "created_at", "body"])
                                 expect(comment.votes).to.equal(18);
