@@ -26,7 +26,7 @@ exports.updateArticle = (votes = 0, article_id) => {
         })
 }
 
-exports.selectAllArticles = (sortBy = "created_at", dir = "desc", author, topic, limit = 6, p = 1) => {
+exports.selectAllArticles = (sortBy = "created_at", dir = "desc", author, topic, limit = 10, p = 1) => {
     return connection.select("articles.*")
         .from("articles")
         .leftJoin("comments", "comments.article_id", "articles.article_id")
