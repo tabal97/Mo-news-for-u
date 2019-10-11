@@ -7,7 +7,7 @@ exports.insertComment = (newComment, article_id) => {
         .into("comments")
 }
 
-exports.selectComments = (article_id, sortBy = "created_at", dir = "desc", limit = 5, p = 1) => {
+exports.selectComments = (article_id, sortBy = "created_at", dir = "desc", limit = 10, p = 1) => {
     return connection.select("comment_id", "votes", "created_at", "author", "body")
         .from("comments")
         .orderBy(sortBy, dir)
