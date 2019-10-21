@@ -55,8 +55,8 @@ const customConfigs = {
 module.exports = { ...baseConfig, ...customConfigs[ENV] };
 ```
 
--To seed the database, run the script `npm run seed`.
--Then, to run the application, `npm run dev`, and this will start up the local server.
+- To seed the database, run the script `npm run seed`.
+- Then, to run the application, `npm run dev`, and this will start up the local server.
 
 Once you have received the confirmation that your local server is up and running then you can access the API on the browser using the address, `localhost:9090/api`.
 This endpoint will show you all the other endpoints that are available for you to use.
